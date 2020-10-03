@@ -1,0 +1,25 @@
+include_directories("./")
+include_directories("../../user/MIT_Controller/Controllers/BalanceController/")
+include_directories("../../robot/include/")
+include_directories("../../common/include/")
+include_directories("../../third-party/qpOASES/include/")
+include_directories("../../user/MIT_Controller/FSM_States/")
+include_directories("../../third-party/")
+include_directories("../../third-party/ParamHandler")
+
+include_directories("../../lcm-types/cpp")
+include_directories("/usr/local/include/lcm/")   # lcm includes
+include_directories("/usr/local/include/eigen3")   # lcm includes
+
+include_directories(${CMAKE_BINARY_DIR})
+
+#set (CMAKE_CXX_FLAGS "-Wno-overloaded-virtual")
+
+file(GLOB_RECURSE sources
+"../../user/MIT_Controller/Controllers/BalanceController/*.cpp" )
+
+
+add_executable(balance_ctrl ${sources} stand.cpp main.cpp)
+target_link_libraries(balance_ctrl robot)
+target_link_libraries(balance_ctrl dynacore_param_handler qpOASES)
+

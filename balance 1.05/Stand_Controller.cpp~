@@ -1,0 +1,33 @@
+#include "Stand_Controller.h"
+#include <iostream>
+
+
+void Stand_Controller::runController(){
+  static int iter = 0;
+  iter ++;
+  for(size_t leg(0); leg<4; ++leg){
+    _ini_foot_pos[leg] = this->_data->_legController->datas[leg].p;
+  }
+  FBModelState<float> state;
+  state.bodyOrientation = _stateEstimate->orientation;
+  state.bodyPosition    = _stateEstimate->position;
+  state.bodyVelocity.head(3) = _stateEstimate->omegaBody;
+  state.bodyVelocity.tail(3) = _stateEstimate->vBody;
+  state.q.setZero(12);
+  state.qd.setZero(12);
+  float hMax = 0.25;
+  float progress = 2 * iter * this->_data->controlParameters->controller_dt;
+
+  if (progress > 1.){ progress = 1.; }
+
+  for(int i = 0; i < 4; i++) {
+      this->_data->_legController->commands[i].kpCartesian = Vec3<T>(500, 500, 500).asDiagonal();
+      this->_data->_legController->commands[i].kdCartesian = Vec3<T>(8, 8, 8).asDiagonal();
+
+      this->_data->_legController->commands[i].pDes = _ini_foot_pos[i];
+      this->_data->_legController->commands[i].pDes[2] = 
+        progress*(-hMax) + (1. - progress) * _ini_foot_pos[i][2];
+      }
+  _model->setState(state);
+  
+  }

@@ -1,0 +1,10 @@
+include_directories("./")
+include_directories("../../robot/include/")
+include_directories("../../common/include/")
+include_directories("../../third-party/qpOASES/include/")
+include_directories("../../lcm-types/cpp")
+include_directories("../../user/MIT_Controller/FSM_States/")
+include_directories(${CMAKE_BINARY_DIR})
+
+add_executable(stand_ctrl stand.cpp main.cpp)
+target_link_libraries(stand_ctrl robot)

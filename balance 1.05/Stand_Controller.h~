@@ -1,0 +1,30 @@
+#ifndef JPOS_CONTROLLER
+#define JPOS_CONTROLLER
+
+#include <RobotController.h>
+#include "ControlFSMData.h"
+#include "TransitionData.h"
+#include "Controllers/GaitScheduler.h"
+
+#include "stand_parameters.h"
+
+template <typename T>
+class Stand_Controller:public RobotController{
+  public:
+    Standdd_Controller():RobotController(){}
+    virtual ~Stand_Controller(){}
+
+    virtual void initializeController(){}
+    virtual void runController();
+    virtual void updateVisualization(){}
+    virtual ControlParameters* getUserControlParameters() {
+      return &userParameters;
+    }
+   ControlFSMData<float>* _data;
+
+  protected:
+    Stand_Parameters userParameters;
+    int iter = 0;
+    std::vector< Vec3<T> > _ini_foot_pos;
+};
+#endif // STAND_H
